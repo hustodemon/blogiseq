@@ -13,46 +13,39 @@
 ; - auto scan of resources
 
 ;;;;;;;;;;;;;;; Menu gen
-(defn lazy-lines [path]
- (with-open [f (clojure.java.io/reader path)]
-  (line-seq f)))
-
-(defn read-meta
-  "Reads franky meta data. so far mock todo try clojure spec."
-  [path]
-  {:title (str "Toz vitajte na: " path) 
-   :tags "first,test,franky's new blog!"
-   :disqus-id 123})
-
-(defn read-content
-  [path])
-
 (defn md-path->link
   "This will generate a link with a reasonable text (extracted from the md)."
   [path]
   (let [franky-meta (read-meta path)]
     [:a {:href path} (:title franky-meta)]))
 
+(defn menu-edn->hiccup
+  [edn]
+  (map
+    (fn [elem] [:a {:href (:href elem)} (:title elem)])
+    edn))
+
 (defn generate-menu-navi
   "Generates menu navigation structure."
   [path]
-  (->> (file-seq (java.io.File. path))
-    (filter #(clojure.string/ends-with? % ".md"))
-    (map #(.getPath %))
-    (map md-path->link)))
-;;;;;;;;;;;;;
+  (-> path
+    slurp
+    clojure.edn/read-string
+    menu-edn->hiccup))
 
+;;;;;;;;;;;;;
 (defn site
   [content]
   [:div
    [:div "Top"]
-   [:div (generate-menu-navi "resources")]
+   [:div (generate-menu-navi "resources/meta.edn")]
    [:div content]])
 
 (defn detail
   "Todo: fecurity."
   [path]
-  (slurp path))
+  (md/md-to-html-string
+    (slurp path)))
 
 (defn app [req]
   {:status 200
