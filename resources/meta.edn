@@ -1,0 +1,4 @@
+(
+    {:title "first article" :href "/resources/articles/first.md"}
+    {:title "about article" :href "/resources/articles/about.md"}
+)

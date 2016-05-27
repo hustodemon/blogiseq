@@ -5,4 +5,4 @@ This blog rulez!
 <img src="/resources/images/bike.png" width="300" />
 
 # ...and markdown
-![bike trip](/resources/images/bike.png)
+(the image was too big, fucking up the layout)

@@ -2,6 +2,7 @@
   (:require
     [org.httpkit.server :as server]
     [hiccup.core :as hiccup]
+    [hiccup.page :as hiccup-page]
     [clojure.data.json :as json]
     [compojure.core :as compojure]
     [compojure.route :as compojure-route]
@@ -14,17 +15,12 @@
 ; - auto scan of resources
 
 ;;;;;;;;;;;;;;; Menu gen
-(defn md-path->link
-  "This will generate a link with a reasonable text (extracted from the md)."
-  [path]
-  (let [franky-meta (read-meta path)]
-    [:a {:href path} (:title franky-meta)]))
-
 (defn menu-edn->hiccup
   [edn]
+  [:ul
   (map
-    (fn [elem] [:a {:href (:href elem)} (:title elem)])
-    edn))
+    (fn [elem] [:li [:a {:href (:href elem)} (:title elem)]])
+    edn)])
 
 (defn generate-menu-navi
   "Generates menu navigation structure."
@@ -34,13 +30,21 @@
     clojure.edn/read-string
     menu-edn->hiccup))
 
+(def left
+  [:div
+   [:h3 "Franky's blog"]
+   [:p "Hi, my name is Franky, I do this and that...ble blehh lorem ipsum."]
+   [:p [:i "testing some stuff"]]])
+
 ;;;;;;;;;;;;;
 (defn site
   [content]
   [:div
-   [:div "Top"]
-   [:div (generate-menu-navi "resources/meta.edn")]
-   [:div content]])
+   (hiccup-page/include-css "/resources/css/franky.css")
+   [:div.container
+    [:div.left left]
+    [:div.right (generate-menu-navi "resources/meta.edn")]
+    [:div.middle content]]])
 
 (defn detail
   "Todo: fecurity."
@@ -57,9 +61,10 @@
 
 (compojure/defroutes
   routes
-  (compojure/GET "/" [] (hiccup/html (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md"))))))
+  (compojure/GET "/" [] (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md")))))
   (compojure/GET "/resources/articles/:file" [file] (hiccup/html (site (detail (str "resources/articles/" file)))))
-  (compojure-route/resources "/resources/images" {:root "images"}))
+  (compojure-route/resources "/resources/images" {:root "images"})
+  (compojure-route/resources "/resources/css" {:root "css"}))
 
 (defn start []
   (reset! server (server/run-server (fn [r] (routes r)) {:port 3001})))
