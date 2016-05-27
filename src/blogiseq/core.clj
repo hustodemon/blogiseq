@@ -4,6 +4,7 @@
     [hiccup.core :as hiccup]
     [clojure.data.json :as json]
     [compojure.core :as compojure]
+    [compojure.route :as compojure-route]
     [markdown.core :as md]))
 
 ; todo list
@@ -57,7 +58,8 @@
 (compojure/defroutes
   routes
   (compojure/GET "/" [] (hiccup/html (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md"))))))
-  (compojure/GET "/resources/articles/:file" [file] (hiccup/html (site (detail (str "resources/articles/" file))))))
+  (compojure/GET "/resources/articles/:file" [file] (hiccup/html (site (detail (str "resources/articles/" file)))))
+  (compojure-route/resources "/resources/images" {:root "images"}))
 
 (defn start []
   (reset! server (server/run-server (fn [r] (routes r)) {:port 3001})))
