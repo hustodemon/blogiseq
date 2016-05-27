@@ -3,6 +3,7 @@
     [org.httpkit.server :as server]
     [hiccup.core :as hiccup]
     [hiccup.page :as hiccup-page]
+    [hiccup.element :as hiccup-element]
     [clojure.data.json :as json]
     [compojure.core :as compojure]
     [compojure.route :as compojure-route]
@@ -36,11 +37,19 @@
    [:p "Hi, my name is Franky, I do this and that...ble blehh lorem ipsum."]
    [:p [:i "testing some stuff"]]])
 
+(defn include-js-code-highlight []
+  [:div ; do i have to use wrapping div?
+   (hiccup-page/include-css "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/atelier-dune-light.min.css")
+   [:script {:src "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"}]
+   (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")
+   ])
+
 ;;;;;;;;;;;;;
 (defn site
   [content]
   [:div
    (hiccup-page/include-css "/resources/css/franky.css")
+   (include-js-code-highlight)
    [:div.container
     [:div.left left]
     [:div.right (generate-menu-navi "resources/meta.edn")]
