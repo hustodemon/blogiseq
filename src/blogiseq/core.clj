@@ -4,7 +4,6 @@
     [hiccup.core :as hiccup]
     [hiccup.page :as hiccup-page]
     [hiccup.element :as hiccup-element]
-    [clojure.data.json :as json]
     [compojure.core :as compojure]
     [compojure.route :as compojure-route]
     [markdown.core :as md]))
