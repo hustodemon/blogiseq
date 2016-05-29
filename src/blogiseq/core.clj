@@ -124,9 +124,19 @@
             [:a {:href enhanced-path} [:img.thumb {:src enhanced-path :width 160}]]))
         paths)]]))
 
+(defn photowalls-index
+  "lame - use metadata instead"
+  [path]
+  [:div
+   [:h1 "My photowalls"]
+   "Here you can find list of my memories."
+   (map (fn [p] [:p [:a {:href (str "/photowalls/" (.getName p))} p]])
+        (.listFiles (clojure.java.io/file path)))])
+
 (compojure/defroutes
   routes
   (compojure-route/resources "/resources/photowalls/" {:root "photowalls/"}) ; all photowalls resources (photos)
+  (compojure/GET "/photowalls/index" [] (hiccup/html (site (photowalls-index "resources/photowalls"))))
   (compojure/GET "/photowalls/:name" [name] (hiccup/html (site (dir-to-photowall (str "resources/photowalls/" name)))))
 
   (compojure/GET "/" [] (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md")))))
