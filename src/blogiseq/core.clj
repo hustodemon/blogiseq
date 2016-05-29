@@ -37,12 +37,33 @@
    [:p "Hi, my name is Franky, I do this and that...ble blehh lorem ipsum."]
    [:p [:i "testing some stuff"]]])
 
-(defn include-js-code-highlight []
+(defn include-js-code-highlight [] ; todo use def
   [:div ; do i have to use wrapping div?
    (hiccup-page/include-css "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/atelier-dune-light.min.css")
+   ;(hiccup-page/include-css "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/gruvbox-light.min.css")
    [:script {:src "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"}]
-   (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")
-   ])
+   (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")])
+
+(defn disqus-embed []
+  [:div
+   "<div id=\"disqus_thread=\"></div>
+   <script>
+   var disqus_config = function () {
+   this.page.url = this.page.url = 'http://example.com/helloworld.html'; // todo
+   this.page.identifier = 'single-id-so-far'; // todo
+   };
+   */
+   (function() {  // DON'T EDIT BELOW THIS LINE
+   var d = document, s = d.createElement('script');
+
+   s.src = '//frankysblogiseq.disqus.com/embed.js';
+
+   s.setAttribute('data-timestamp', +new Date());
+   (d.head || d.body).appendChild(s);
+   })();
+   </script>
+   <noscript>Please enable JavaScript to view the <a href=\"https://disqus.com/?ref_noscript\" rel=\"nofollow\">comments powered by Disqus.</a></noscript>
+   "])
 
 ;;;;;;;;;;;;;
 (defn site
@@ -50,10 +71,13 @@
   [:div
    (hiccup-page/include-css "/resources/css/franky.css")
    (include-js-code-highlight)
+   (disqus-embed)
    [:div.container
     [:div.left left]
     [:div.right (generate-menu-navi "resources/meta.edn")]
-    [:div.middle content]]])
+    [:div.middle [:div content
+                  [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]]
+    ]]])
 
 (defn detail
   "Todo: fecurity."

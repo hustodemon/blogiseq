@@ -8,10 +8,14 @@ This blog rulez!
 (the image was too big, fucking up the layout)
 
 ## Code
-Here we'd like to have some code in clojure:
+Here we'd like to have some code in clojure (demo of infinite power of `defn`):
 ```clojure
 (defn hi [n]
   (str "Hi " n))
+
+; comment
+(defn some-other-fc [xs]
+  (map #(str "hi " %) xs))
 ```
 
 ..., and in java:
