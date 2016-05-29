@@ -105,7 +105,7 @@
       (copy-path-if-not-exists path mini-name))))
 
 (defn is-image? [path]
-  (not (nil? (re-find #"jpg|png|gif" (clojure.string/lower-case path)))))
+  (not (nil? (re-find #"jpg$|png$|gif$" (clojure.string/lower-case path)))))
 
 (is-image? "resources/photowalls/usa")
 
