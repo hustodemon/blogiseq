@@ -155,4 +155,8 @@
   (stop)
   (start))
 
-  (restart)
+(comment
+  (restart))
+
+(defn -main [& args] (start))
+

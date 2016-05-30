@@ -7,4 +7,5 @@
                  [markdown-clj "0.9.89"]
                  [http-kit "2.1.18"]
                  [hiccup "1.0.5"]
-                 [compojure "1.5.0"]])
+                 [compojure "1.5.0"]]
+  :main blogiseq.core)
