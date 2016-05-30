@@ -49,9 +49,8 @@
    <script>
    var disqus_config = function () {
    this.page.url = this.page.url = 'http://example.com/helloworld.html'; // todo
-   this.page.identifier = 'single-id-so-far'; // todo
+   this.page.identifier = 'single-id-for-whole-page-so-far'; // todo
    };
-   */
    (function() {  // DON'T EDIT BELOW THIS LINE
    var d = document, s = d.createElement('script');
 
@@ -75,6 +74,7 @@
     [:div.left left]
     [:div.right (generate-menu-navi "resources/meta.edn")]
     [:div.middle [:div content
+                  [:div#disqus_thread]
                   [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]]
     ]]])
 
