@@ -6,7 +6,8 @@
     [hiccup.element :as hiccup-element]
     [compojure.core :as compojure]
     [compojure.route :as compojure-route]
-    [markdown.core :as md]))
+    [markdown.core :as md])
+  (:gen-class))
 
 ; todo list
 ; + site layout (hiccup)
