@@ -136,9 +136,9 @@
 
 (compojure/defroutes
   routes
-  (compojure-route/resources "/resources/photowalls/" {:root "photowalls/"}) ; all photowalls resources (photos)
-  (compojure/GET "/photowalls/index" [] (hiccup/html (site (photowalls-index "resources/photowalls"))))
-  (compojure/GET "/photowalls/:name" [name] (hiccup/html (site (dir-to-photowall (str "resources/photowalls/" name)))))
+  ;(compojure-route/resources "/resources/photowalls/" {:root "photowalls/"}) ; all photowalls resources (photos)
+  ;(compojure/GET "/photowalls/index" [] (hiccup/html (site (photowalls-index "resources/photowalls"))))
+  ;(compojure/GET "/photowalls/:name" [name] (hiccup/html (site (dir-to-photowall (str "resources/photowalls/" name)))))
 
   (compojure/GET "/" [] (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md")))))
   (compojure/GET "/resources/articles/:file" [file] (hiccup/html (site (detail (str "resources/articles/" file)))))
