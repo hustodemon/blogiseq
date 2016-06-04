@@ -6,6 +6,13 @@ A Clojure library designed to ... well, that part is up to you.
 
 FIXME
 
+## TODO
+* site layout (hiccup)
+* css
+* multipage support (compojure)
+* auto scan of resources - **nope** - we'll rely on meta.edn
+* refactor stuff
+
 ## License
 
 Copyright © 2016 FIXME
