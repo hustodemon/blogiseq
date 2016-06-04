@@ -36,11 +36,10 @@
    [:p "Hi, my name is Franky, I do this and that...ble blehh lorem ipsum."]
    [:p [:i "testing some stuff"]]])
 
-(defn include-js-code-highlight [] ; todo use def
-  [:div ; do i have to use wrapping div?
+(def include-js-code-highlight
+  [:div
    (hiccup-page/include-css "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/atelier-dune-light.min.css")
-   ;(hiccup-page/include-css "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/gruvbox-light.min.css")
-   [:script {:src "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"}]
+   (hiccup-page/include-js "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js")
    (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")])
 
 (defn embed-disqus [page-id]
@@ -69,7 +68,7 @@
   [content]
   [:div
    (hiccup-page/include-css "/css/franky.css")
-   (include-js-code-highlight)
+   include-js-code-highlight
    [:div.container
     [:div.left left]
     [:div.right (generate-menu-navi "resources/meta.edn")]
