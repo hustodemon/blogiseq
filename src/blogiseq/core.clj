@@ -42,26 +42,26 @@
    (hiccup-page/include-js "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js")
    (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")])
 
+(defn disqus-js [page-id]
+  (str "var disqus_config = function () {
+       // todo try if ommiting this will be annoying:
+       // this.page.url = 'http://www.franky-canonical-fqdn.com/';
+       this.page.identifier = '"page-id"';
+       };
+       (function() {  // DON'T EDIT BELOW THIS LINE
+       var d = document, s = d.createElement('script');
+
+       s.src = '//frankysblogiseq.disqus.com/embed.js';
+
+       s.setAttribute('data-timestamp', +new Date());
+       (d.head || d.body).appendChild(s);
+       })();"))
+
 (defn embed-disqus [page-id]
   [:div
-   (str
-     "<div id=\"disqus_thread=\"></div>
-     <script>
-     var disqus_config = function () {
-     //this.page.url = 'http://www.franky-canonical-fqdn.com/';// todo try if ommiting this will be annoying
-     this.page.identifier = '"page-id"';
-     };
-     (function() {  // DON'T EDIT BELOW THIS LINE
-     var d = document, s = d.createElement('script');
-
-     s.src = '//frankysblogiseq.disqus.com/embed.js';
-
-     s.setAttribute('data-timestamp', +new Date());
-     (d.head || d.body).appendChild(s);
-     })();
-     </script>
-     <noscript>Please enable JavaScript to view the <a href=\"https://disqus.com/?ref_noscript\" rel=\"nofollow\">comments powered by Disqus.</a></noscript>
-     ")])
+   [:div.disqus_thread]
+   (hiccup-element/javascript-tag (disqus-js page-id))
+   [:noscript "Please enable JavaScript to view the <a href=\"https://disqus.com/?ref_noscript\" rel=\"nofollow\">comments powered by Disqus.</a>"]])
 
 ;;;;;;;;;;;;;
 (defn site
