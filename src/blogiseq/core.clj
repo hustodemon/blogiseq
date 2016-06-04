@@ -141,7 +141,7 @@
   ;(compojure/GET "/photowalls/:name" [name] (hiccup/html (site (dir-to-photowall (str "resources/photowalls/" name)))))
 
   (compojure/GET "/" [] (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md")))))
-  (compojure/GET "/articles/:article/:md-file" [article md-file] (hiccup/html (site (detail (str "resources/articles/" article "/" md-file)))))
+  (compojure/GET "/articles/:article/:md-file.md" [article md-file] (hiccup/html (site (detail (str "resources/articles/" article "/" md-file ".md")))))
   (compojure-route/resources "/articles" {:root "articles"})
   (compojure-route/resources "/images" {:root "images"})
   (compojure-route/resources "/css" {:root "css"})
