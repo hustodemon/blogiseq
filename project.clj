@@ -9,4 +9,5 @@
                  [hiccup "1.0.5"]
                  [compojure "1.5.0"]]
   :profiles  {:uberjar  {:aot :all}}
+  :repl-options {:port 7000}
   :main blogiseq.core)
