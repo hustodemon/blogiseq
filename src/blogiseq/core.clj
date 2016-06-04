@@ -83,11 +83,6 @@
   (md/md-to-html-string
     (slurp path)))
 
-(defn app [req]
-  {:status 200
-   :headers {"Content-Type"  "text/html"}
-   :body (hiccup/html site)})
-
 (defonce server (atom nil))
 
 (defn copy-path-if-not-exists
@@ -105,8 +100,6 @@
 
 (defn is-image? [path]
   (not (nil? (re-find #"jpg$|png$|gif$" (clojure.string/lower-case path)))))
-
-(is-image? "resources/photowalls/usa")
 
 (defn dir-to-photowall [path]
   (let [f (clojure.java.io/file path)
