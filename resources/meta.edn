@@ -1,5 +1,5 @@
 (
-    {:title "first article" :href "/resources/articles/first/index.md"}
-    {:title "about article" :href "/resources/articles/about/index.md"}
+    {:title "first article" :href "/articles/first/index.md"}
+    {:title "about article" :href "/articles/about/index.md"}
 )
 

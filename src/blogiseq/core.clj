@@ -68,7 +68,7 @@
 (defn site
   [content]
   [:div
-   (hiccup-page/include-css "/resources/css/franky.css")
+   (hiccup-page/include-css "/css/franky.css")
    (include-js-code-highlight)
    (disqus-embed)
    [:div.container
@@ -136,15 +136,16 @@
 
 (compojure/defroutes
   routes
-  ;(compojure-route/resources "/resources/photowalls/" {:root "photowalls/"}) ; all photowalls resources (photos)
+  ;(compojure-route/resources "photowalls/" {:root "photowalls/"}) ; all photowalls resources (photos)
   ;(compojure/GET "/photowalls/index" [] (hiccup/html (site (photowalls-index "resources/photowalls"))))
   ;(compojure/GET "/photowalls/:name" [name] (hiccup/html (site (dir-to-photowall (str "resources/photowalls/" name)))))
 
   (compojure/GET "/" [] (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md")))))
-  (compojure/GET "/resources/articles/:article/:md-file" [article md-file] (hiccup/html (site (detail (str "resources/articles/" article "/" md-file)))))
-  (compojure-route/resources "/resources/articles" {:root "articles"})
-  (compojure-route/resources "/resources/images" {:root "images"})
-  (compojure-route/resources "/resources/css" {:root "css"}))
+  (compojure/GET "/articles/:article/:md-file" [article md-file] (hiccup/html (site (detail (str "resources/articles/" article "/" md-file)))))
+  (compojure-route/resources "/articles" {:root "articles"})
+  (compojure-route/resources "/images" {:root "images"})
+  (compojure-route/resources "/css" {:root "css"})
+  (compojure-route/not-found (hiccup/html (site "Stuff not found."))))
 
 (defn start []
   (reset! server (server/run-server (fn [r] (routes r)) {:port 3001})))
