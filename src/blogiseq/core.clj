@@ -11,9 +11,9 @@
 
 ; todo list
 ; + site layout (hiccup)
-; - css
-; - multipage support (compojure)
-; - auto scan of resources
+; + css
+; + multipage support (compojure)
+; - auto scan of resources - nope - we'll rely on meta.edn
 
 ;;;;;;;;;;;;;;; Menu gen
 (defn menu-edn->hiccup
