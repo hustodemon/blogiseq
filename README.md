@@ -8,7 +8,7 @@ FIXME
 
 ## TODO
 * refactor stuff
-* make the photowall plugin work again?
+* make the photowall plugin work again (use git history to revive that beast)
 
 ## License
 
