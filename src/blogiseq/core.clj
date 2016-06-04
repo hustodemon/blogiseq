@@ -10,7 +10,7 @@
   (:gen-class))
 
 ;;;;;;;;;;;;;;; Menu gen
-(defn menu-edn->hiccup
+(defn articles-edn->hiccup
   [edn]
   [:ul
   (map
@@ -28,7 +28,7 @@
   (-> path
     parse-meta-edn
     :articles
-    menu-edn->hiccup))
+    articles-edn->hiccup))
 
 (def left
   [:div
