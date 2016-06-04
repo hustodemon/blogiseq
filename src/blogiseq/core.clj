@@ -23,12 +23,17 @@
     (fn [elem] [:li [:a {:href (:href elem)} (:title elem)]])
     edn)])
 
+(defn parse-meta-edn [path]
+  (-> path
+    slurp
+    clojure.edn/read-string))
+
 (defn generate-menu-navi
   "Generates menu navigation structure."
   [path]
   (-> path
-    slurp
-    clojure.edn/read-string
+    parse-meta-edn
+    :articles
     menu-edn->hiccup))
 
 (def left
@@ -44,25 +49,26 @@
    [:script {:src "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"}]
    (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")])
 
-(defn disqus-embed []
+(defn embed-disqus [page-id]
   [:div
-   "<div id=\"disqus_thread=\"></div>
-   <script>
-   var disqus_config = function () {
-   this.page.url = this.page.url = 'http://example.com/helloworld.html'; // todo
-   this.page.identifier = 'single-id-for-whole-page-so-far'; // todo
-   };
-   (function() {  // DON'T EDIT BELOW THIS LINE
-   var d = document, s = d.createElement('script');
+   (str
+     "<div id=\"disqus_thread=\"></div>
+     <script>
+     var disqus_config = function () {
+     //this.page.url = 'http://www.franky-canonical-fqdn.com/';// todo try if ommiting this will be annoying
+     this.page.identifier = '"page-id"';
+     };
+     (function() {  // DON'T EDIT BELOW THIS LINE
+     var d = document, s = d.createElement('script');
 
-   s.src = '//frankysblogiseq.disqus.com/embed.js';
+     s.src = '//frankysblogiseq.disqus.com/embed.js';
 
-   s.setAttribute('data-timestamp', +new Date());
-   (d.head || d.body).appendChild(s);
-   })();
-   </script>
-   <noscript>Please enable JavaScript to view the <a href=\"https://disqus.com/?ref_noscript\" rel=\"nofollow\">comments powered by Disqus.</a></noscript>
-   "])
+     s.setAttribute('data-timestamp', +new Date());
+     (d.head || d.body).appendChild(s);
+     })();
+     </script>
+     <noscript>Please enable JavaScript to view the <a href=\"https://disqus.com/?ref_noscript\" rel=\"nofollow\">comments powered by Disqus.</a></noscript>
+     ")])
 
 ;;;;;;;;;;;;;
 (defn site
@@ -70,7 +76,6 @@
   [:div
    (hiccup-page/include-css "/css/franky.css")
    (include-js-code-highlight)
-   (disqus-embed)
    [:div.container
     [:div.left left]
     [:div.right (generate-menu-navi "resources/meta.edn")]
@@ -141,7 +146,10 @@
   ;(compojure/GET "/photowalls/:name" [name] (hiccup/html (site (dir-to-photowall (str "resources/photowalls/" name)))))
 
   (compojure/GET "/" [] (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md")))))
-  (compojure/GET "/articles/:article/:md-file.md" [article md-file] (hiccup/html (site (detail (str "resources/articles/" article "/" md-file ".md")))))
+  (compojure/GET "/articles/:article/:md-file.md" [article md-file] (hiccup/html (site [:div
+                                                                                        (detail (str "resources/articles/" article "/" md-file ".md"))
+                                                                                        [:div (embed-disqus (str "franky-very-long-disqus-id-" article))]
+                                                                                        ])))
   (compojure-route/resources "/articles" {:root "articles"})
   (compojure-route/resources "/images" {:root "images"})
   (compojure-route/resources "/css" {:root "css"})
