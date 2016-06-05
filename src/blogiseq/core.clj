@@ -9,7 +9,7 @@
     [markdown.core :as md])
   (:gen-class))
 
-;;;;;;;;;;;;;;; Menu gen
+
 (defn articles-edn->hiccup
   [edn]
   [:ul
