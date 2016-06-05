@@ -30,10 +30,10 @@
     :articles
     articles-edn->hiccup))
 
-(def left
+(def about
   [:div
    [:h3 "Franky's blog"]
-   [:div.about-misc
+   [:div#about-misc
     [:p "Hi, my name is Franky, I do this and that...ble blehh lorem ipsum."]
     [:p [:i "testing some stuff"]]]])
 
@@ -84,11 +84,11 @@
    toggle-menu-js
    [:div ]
    [:div.container
-    [:div.left left]
-    [:div#menu.right
-     [:div.right-header "MENU"]
+    [:div#about about]
+    [:div#menu
+     [:h3#menu-header "MENU"]
      [:div#menu-inner (generate-menu-navi "resources/meta.edn")]]
-    [:div.middle [:div content
+    [:div#main [:div content
                   [:div#disqus_thread]
                   [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]]
     ]]
