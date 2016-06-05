@@ -33,8 +33,9 @@
 (def left
   [:div
    [:h3 "Franky's blog"]
-   [:p "Hi, my name is Franky, I do this and that...ble blehh lorem ipsum."]
-   [:p [:i "testing some stuff"]]])
+   [:div.about-misc
+    [:p "Hi, my name is Franky, I do this and that...ble blehh lorem ipsum."]
+    [:p [:i "testing some stuff"]]]])
 
 (def include-js-code-highlight
   [:div
@@ -63,19 +64,35 @@
    (hiccup-element/javascript-tag (disqus-js page-id))
    [:noscript "Please enable JavaScript to view the <a href=\"https://disqus.com/?ref_noscript\" rel=\"nofollow\">comments powered by Disqus.</a>"]])
 
-;;;;;;;;;;;;;
+(def toggle-menu-js
+  (hiccup-element/javascript-tag "
+    function toggleMenu() {
+        var yourUl = document.getElementById('menu-inner');
+        yourUl.style.display = (yourUl.style.display === 'none' || yourUl.style.display === '') ? 'block' : 'none';
+   }
+   
+   document.addEventListener('DOMContentLoaded', function(event) {
+     document.getElementById('menu').addEventListener('click', toggleMenu);
+   });
+"))
+
 (defn site
   [content]
   [:div
    (hiccup-page/include-css "/css/franky.css")
    include-js-code-highlight
+   toggle-menu-js
+   [:div ]
    [:div.container
     [:div.left left]
-    [:div.right (generate-menu-navi "resources/meta.edn")]
+    [:div#menu.right
+     [:div.right-header "MENU"]
+     [:div#menu-inner (generate-menu-navi "resources/meta.edn")]]
     [:div.middle [:div content
                   [:div#disqus_thread]
                   [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]]
-    ]]])
+    ]]
+   ])
 
 (defn detail
   "Todo: fecurity."
