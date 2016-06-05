@@ -8,6 +8,7 @@ FIXME
 
 ## TODO
 * refactor stuff
+* mobile css
 * make the photowall plugin work again (use git history to revive that beast)
 
 ## License
