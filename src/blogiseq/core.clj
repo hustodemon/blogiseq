@@ -115,7 +115,7 @@
   (compojure-route/not-found (hiccup/html (site "Stuff not found."))))
 
 (defn start []
-  (reset! server (server/run-server (fn [r] (routes r)) {:port 3001})))
+  (reset! server (server/run-server (fn [r] (routes r)) {:port 3000})))
 
 (defn stop []
   (if (not (nil? @server))
