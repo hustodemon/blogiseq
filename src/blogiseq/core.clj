@@ -19,6 +19,7 @@
                        article (slurp (str "resources/" resource ".md"))]
                    (site/render-with-disqus (md/md-to-html-string article) nil)))
   (compojure-route/resources "/articles" {:root "articles"})
+  (compojure-route/resources "/images" {:root "images"})
   (compojure-route/resources "/css" {:root "css"})
   (compojure-route/resources "/js" {:root "js"})
   (compojure-route/not-found (hiccup/html (site/render "Stuff not found."))))
