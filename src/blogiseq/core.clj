@@ -44,19 +44,10 @@
    (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")])
 
 (defn disqus-js [page-id]
-  (str "var disqus_config = function () {
-       // todo try if ommiting this will be annoying:
-       // this.page.url = 'http://www.franky-canonical-fqdn.com/';
-       this.page.identifier = '"page-id"';
-       };
-       (function() {  // DON'T EDIT BELOW THIS LINE
-       var d = document, s = d.createElement('script');
-
-       s.src = '//frankysblogiseq.disqus.com/embed.js';
-
-       s.setAttribute('data-timestamp', +new Date());
-       (d.head || d.body).appendChild(s);
-       })();"))
+  (clojure.string/replace
+    (slurp "resources/js/disqus.js")
+    "<PAGE_ID>"
+    page-id))
 
 (defn embed-disqus [page-id]
   [:div
@@ -112,6 +103,7 @@
   (compojure-route/resources "/articles" {:root "articles"})
   (compojure-route/resources "/images" {:root "images"})
   (compojure-route/resources "/css" {:root "css"})
+  (compojure-route/resources "/js" {:root "js"})
   (compojure-route/not-found (hiccup/html (site "Stuff not found."))))
 
 (defn start []
