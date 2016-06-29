@@ -1,6 +1,6 @@
 # How to make this thing run?
 
-There are generally 2 options:
+Clone the repo, `cd` inside. Now there are generally 2 options:
 
 1. REPL way
  ```
