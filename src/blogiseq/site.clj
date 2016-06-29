@@ -55,6 +55,9 @@
    (hiccup-page/include-css "/css/franky.css")
    include-js-code-highlight
    include-js-utils
+   [:link {:rel "icon"
+           :type "image/png"
+           :href "/images/favicon.png"}]
    [:div.container
     [:div#about about]
     [:div#menu
