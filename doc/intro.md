@@ -1,25 +1,26 @@
 # How to make this thing run?
 
 There are generally 2 options:
+
 1. REPL way
-```
-lein run
-```
-In this case, blogiseq looks into the `resources/` directory in the folder and
-server resources from there.
+ ```
+ lein run
+ ```
+ In this case, blogiseq looks into the `resources/` directory in the folder and
+ server resources from there.
 
 2. Self-contained way
-```
-lein uberjar
-```
-This will generate a jar in the `target/` dir which can be run as follows:
-```
-java -jar blogiseq-0.1.0-standalone.jar # replace with your standalone file :)
+ ```
+ lein uberjar
+ ```
+ This will generate a jar in the `target/` dir which can be run as follows:
+ ```
+ java -jar blogiseq-0.1.0-standalone.jar # replace with your standalone file :)
 
-```
-In this case it is important that you have the `resources/` directory populated
-with meaningful stuff (see the `resources/` directory in the project repository
-for examples).
+ ```
+ In this case it is important that you have the `resources/` directory populated
+ with meaningful stuff (see the `resources/` directory in the project repository
+ for examples).
 
 # Required files
 They are under the `required/` directory:
