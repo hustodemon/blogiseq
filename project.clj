@@ -1,4 +1,4 @@
-(defproject blogiseq "0.1.0-SNAPSHOT"
+(defproject blogiseq "0.1.1"
   :description "Simple databaseless blogging"
   :url "todo github"
   :license {:name "Eclipse Public License"
