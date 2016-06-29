@@ -1,5 +1,6 @@
 (ns blogiseq.core
   (:require
+    [blogiseq.utils :as utils]
     [org.httpkit.server :as server]
     [hiccup.core :as hiccup]
     [hiccup.page :as hiccup-page]
@@ -9,33 +10,25 @@
     [markdown.core :as md])
   (:gen-class))
 
-
-(defn articles-edn->hiccup
+(defn articles-edn->hiccup-menu
   [edn]
   [:ul
-  (map
-    (fn [elem] [:li [:a {:href (:href elem)} (:title elem)]])
-    edn)])
-
-(defn parse-meta-edn [path]
-  (-> path
-    slurp
-    clojure.edn/read-string))
+   (map
+     (fn [elem] [:li [:a {:href (:href elem)} (:title elem)]])
+     edn)])
 
 (defn generate-menu-navi
   "Generates menu navigation structure."
   [path]
   (-> path
-    parse-meta-edn
+    utils/parse-edn
     :articles
-    articles-edn->hiccup))
+    articles-edn->hiccup-menu))
 
 (def about
-  [:div
-   [:h3 "Franky's blog"]
-   [:div#about-misc
-    [:p "Hi, my name is Franky, I do this and that...ble blehh lorem ipsum."]
-    [:p [:i "testing some stuff"]]]])
+  (->
+    (slurp "resources/required/left-column.md")
+    (md/md-to-html-string)))
 
 (def include-js-code-highlight
   [:div
@@ -43,68 +36,61 @@
    (hiccup-page/include-js "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js")
    (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")])
 
-(defn disqus-js [page-id]
-  (clojure.string/replace
-    (slurp "resources/js/disqus.js")
-    "<PAGE_ID>"
-    page-id))
+(def include-js-utils
+  (hiccup-page/include-js "/js/utils.js"))
 
 (defn embed-disqus [page-id]
   [:div
-   [:div.disqus_thread]
-   (hiccup-element/javascript-tag (disqus-js page-id))
-   [:noscript "Please enable JavaScript to view the <a href=\"https://disqus.com/?ref_noscript\" rel=\"nofollow\">comments powered by Disqus.</a>"]])
+   [:div#disqus_thread]
+   [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]
+   (hiccup-element/javascript-tag
+     (clojure.string/replace
+       (slurp "resources/js/disqus.js")
+       "<PAGE_ID>"
+       page-id))
+   [:noscript "Please enable JS to see the discussion (disqus)."]])
 
-(def toggle-menu-js
-  (hiccup-element/javascript-tag "
-    function toggleMenu() {
-        var yourUl = document.getElementById('menu-inner');
-        yourUl.style.display = (yourUl.style.display === 'none' || yourUl.style.display === '') ? 'block' : 'none';
-   }
-   
-   document.addEventListener('DOMContentLoaded', function(event) {
-     document.getElementById('menu').addEventListener('click', toggleMenu);
-   });
-"))
-
-(defn site
+(defn site ; would be cool to externalize this too (to support user-defined layouts)
   [content]
   [:div
    (hiccup-page/include-css "/css/franky.css")
    include-js-code-highlight
-   toggle-menu-js
-   [:div ]
+   include-js-utils
    [:div.container
     [:div#about about]
     [:div#menu
      [:h3#menu-header "MENU"]
      [:div#menu-inner (generate-menu-navi "resources/meta.edn")]]
-    [:div#main [:div content
-                  [:div#disqus_thread]
-                  [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]]
-    ]]
+    [:div#main [:div content]
+     ]]
    ])
 
-(defn detail
-  "Todo: fecurity."
-  [path]
-  (md/md-to-html-string
-    (slurp path)))
+(defn render-article
+  [markdown-str]
+  (md/md-to-html-string markdown-str))
 
-(defonce server (atom nil))
+(defn render-site
+  [content]
+  (-> content
+    site
+    hiccup/html))
 
 (compojure/defroutes
   routes
-  (compojure/GET "/" [] (hiccup/html (site (md/md-to-html-string (slurp "resources/index.md")))))
-  (compojure/GET "/articles/:article/:md-file.md" [article md-file] (hiccup/html (site [:div
-                                                                                        (detail (str "resources/articles/" article "/" md-file ".md"))
-                                                                                        [:div (embed-disqus (str "franky-very-long-disqus-id-" article))]
-                                                                                        ])))
+  (compojure/GET "/" []
+                 (render-site (md/md-to-html-string (slurp "resources/required/index.md"))))
+  (compojure/GET "/*.md" [:as request]  ; why /:resource{\\.md} doesn't work?
+                 (let [resource (:* (:params request))
+                       article (slurp (str "resources/" resource ".md"))]
+                   (render-site [:div
+                                 (render-article article)
+                                 [:div (embed-disqus (str "franky-very-long-disqus-id-" request))]])))
   (compojure-route/resources "/articles" {:root "articles"})
-  (compojure-route/resources "/images" {:root "images"})
   (compojure-route/resources "/css" {:root "css"})
   (compojure-route/resources "/js" {:root "js"})
   (compojure-route/not-found (hiccup/html (site "Stuff not found."))))
+
+(defonce server (atom nil))
 
 (defn start []
   (reset! server (server/run-server (fn [r] (routes r)) {:port 3000})))
