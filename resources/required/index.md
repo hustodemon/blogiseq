@@ -1,4 +1,4 @@
-# Top page
+# Welcome
 
-Toz vitajte.
+...to the site with no purpose so far.
 

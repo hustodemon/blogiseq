@@ -1,7 +1,6 @@
 {
     :articles [
-      {:title "first article" :href "/articles/first/index.md"}
-      {:title "about article" :href "/articles/about/index.md"}
+      {:title "About" :href "/articles/about/index.md"}
     ]
 }
 
