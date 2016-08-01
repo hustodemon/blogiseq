@@ -1,8 +1,27 @@
-function toggleMenu() {
-    var yourUl = document.getElementById('menu-inner');
-    yourUl.style.display = (yourUl.style.display === 'none' || yourUl.style.display === '') ? 'block' : 'none';
+// Get the Sidenav
+var mySidenav = null;
+
+// Get the DIV with overlay effect
+var overlayBg = null;
+
+// Toggle between showing and hiding the sidenav, and add overlay effect
+function w3_open() {
+    if (mySidenav.style.display === 'block') {
+        mySidenav.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidenav.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
 }
 
-document.addEventListener('DOMContentLoaded', function(event) {
-    document.getElementById('menu').addEventListener('click', toggleMenu);
+// Close the sidenav with the close button
+function w3_close() {
+    mySidenav.style.display = "none";
+    overlayBg.style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+    mySidenav = document.getElementById("mySidenav");
+    overlayBg = document.getElementById("myOverlay");
 });

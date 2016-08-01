@@ -13,7 +13,7 @@
   [edn]
   [:ul
    (map
-     (fn [elem] [:li [:a {:href (:href elem)} (:title elem)]])
+     (fn [elem] [:a.w3-hover-black {:href (:href elem)} (:title elem)])
      edn)])
 
 (defn generate-menu-navi
@@ -51,21 +51,43 @@
 
 (defn site ; would be cool to externalize this too (to support user-defined layouts)
   [content]
-  [:div
-   (hiccup-page/include-css "/css/franky.css")
-   include-js-code-highlight
-   include-js-utils
-   [:link {:rel "icon"
-           :type "image/png"
-           :href "/images/favicon.png"}]
-   [:div.container
-    [:div#about about]
-    [:div#menu
-     [:h3#menu-header "MENU"]
-     [:div#menu-inner (generate-menu-navi "resources/meta.edn")]]
-    [:div#main [:div content]
-     ]]
-   ])
+  [:html
+   [:head
+    (hiccup-page/include-css "/css/franky.css")
+     include-js-code-highlight
+     include-js-utils
+     (hiccup-page/include-css "http://www.w3schools.com/lib/w3.css")
+     (hiccup-page/include-css "http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css")
+     [:meta {:name "viewport"
+             :content "width=device-width, initial-scale=1"}]
+     [:link {:rel "icon"
+             :type "image/png"
+             :href "/images/favicon.png"}]
+    ]
+   [:body
+    [:div.w3-content.w3-light-yellow
+     [:nav#mySidenav.w3-sidenav.w3-light-yellow.w3-collapse {:style "z-index:3;width:250px;margin-top:51px;background-color:#fffbc7;"}
+      [:a {:title "Close menu"
+           :class "w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large"
+           :onclick "w3_close()"
+           :href "javascript:void(0)"}
+       "close menu"
+       [:i {:class "fa fa-remove"}]
+       ] 
+      [:div about]
+      [:div (generate-menu-navi "resources/meta.edn")]]
+     [:div {:id "myOverlay",
+            :title "close side menu",
+            :style "cursor:pointer",
+            :onclick "w3_close()",
+            :class "w3-overlay w3-hide-large"}]
+     [:div.w3-main {:style "margin-left:300px"} [:div 
+                                                 [:header {:class "w3-container"} 
+                                                  [:span {:onclick "w3_open()"
+                                                          :class "w3-opennav w3-hide-large w3-xxlarge w3-hover-text-grey"} 
+                                                   [:i {:class  "fa fa-bars"}]]]
+                                                 content]]
+     ]]])
 
 (defn render
   "Renders whole site. Takes chunks of hiccup and renders them in standalone
