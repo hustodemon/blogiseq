@@ -65,9 +65,7 @@
             :class "w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large"
             :onclick "w3_close()"
             :href "javascript:void(0)"}
-        "close menu"
-        [:i {:class "fa fa-remove"}]
-        ]
+        "Close menu"]
        [:div (generate-menu-navi "resources/meta.edn")]]
       [:div {:id "myOverlay",
              :title "close side menu",
@@ -78,7 +76,7 @@
                                                   [:header {:class "w3-container"}
                                                    [:span {:onclick "w3_open()"
                                                            :class "w3-opennav w3-hide-large w3-xxlarge w3-hover-text-grey"}
-                                                    [:i {:class  "fa fa-bars"}]]]
+                                                    "MENU"]]
                                                   content]]
       ]]]])
 
