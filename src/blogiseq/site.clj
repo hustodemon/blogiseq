@@ -29,14 +29,6 @@
     (slurp "resources/required/left-column.md")
     (md/md-to-html-string)))
 
-(def include-js-code-highlight
-  [:div
-   (hiccup-page/include-js "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js")
-   (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")])
-
-(def include-js-utils
-  (hiccup-page/include-js "/js/utils.js"))
-
 (defn embed-disqus [page-id]
   [:div
    [:div#disqus_thread]
@@ -54,13 +46,18 @@
     (map #(hiccup-page/include-css (str "/css/" %)))
   ))
 
+(defn include-js-resources [] ; todo refactor with ^
+  (->>
+    (utils/filenames-with-extension "resources/js" "js")
+    (map #(hiccup-page/include-js (str "/js/" %)))
+  ))
+
 (defn site ; would be cool to externalize this too (to support user-defined layouts)
   [content]
   [:html
    [:head
     (include-css-resources)
-    include-js-code-highlight
-    include-js-utils
+    (include-js-resources)
     [:meta {:name "viewport"
             :content "width=device-width, initial-scale=1"}]
     [:link {:rel "icon"
