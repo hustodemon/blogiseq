@@ -9,14 +9,14 @@
     [markdown.core :as md])
   (:gen-class))
 
-(defn articles-edn->hiccup-menu
+(defn- articles-edn->hiccup-menu
   [edn]
   [:ul
    (map
      (fn [elem] [:a.w3-hover-black {:href (:href elem)} (:title elem)])
      edn)])
 
-(defn generate-menu-navi
+(defn- generate-menu-navi
   "Generates menu navigation structure."
   [path]
   (-> path
@@ -24,12 +24,7 @@
     :articles
     articles-edn->hiccup-menu))
 
-(def about
-  (->
-    (slurp "resources/required/left-column.md")
-    (md/md-to-html-string)))
-
-(defn embed-disqus [page-id]
+(defn- embed-disqus [page-id]
   [:div
    [:div#disqus_thread]
    [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]
@@ -40,19 +35,19 @@
        page-id))
    [:noscript "Please enable JS to see the discussion (disqus)."]])
 
-(defn include-css-resources []
+(defn- include-css-resources []
   (->>
     (utils/filenames-with-extension "resources/css" "css")
     (map #(hiccup-page/include-css (str "/css/" %)))
   ))
 
-(defn include-js-resources [] ; todo refactor with ^
+(defn- include-js-resources [] ; todo refactor with ^
   (->>
     (utils/filenames-with-extension "resources/js" "js")
     (map #(hiccup-page/include-js (str "/js/" %)))
   ))
 
-(defn site ; would be cool to externalize this too (to support user-defined layouts)
+(defn- site ; would be cool to externalize this too (to support user-defined layouts)
   [content]
   [:html
    [:head
@@ -74,7 +69,6 @@
        "close menu"
        [:i {:class "fa fa-remove"}]
        ]
-      [:div about]
       [:div (generate-menu-navi "resources/meta.edn")]]
      [:div {:id "myOverlay",
             :title "close side menu",
