@@ -31,7 +31,6 @@
 
 (def include-js-code-highlight
   [:div
-   (hiccup-page/include-css "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/atelier-dune-light.min.css")
    (hiccup-page/include-js "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js")
    (hiccup-element/javascript-tag "hljs.initHighlightingOnLoad();")])
 
@@ -49,20 +48,24 @@
        page-id))
    [:noscript "Please enable JS to see the discussion (disqus)."]])
 
+(defn include-css-resources []
+  (->>
+    (utils/filenames-with-extension "resources/css" "css")
+    (map #(hiccup-page/include-css (str "/css/" %)))
+  ))
+
 (defn site ; would be cool to externalize this too (to support user-defined layouts)
   [content]
   [:html
    [:head
-    (hiccup-page/include-css "/css/franky.css")
-     include-js-code-highlight
-     include-js-utils
-     (hiccup-page/include-css "http://www.w3schools.com/lib/w3.css")
-     (hiccup-page/include-css "http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css")
-     [:meta {:name "viewport"
-             :content "width=device-width, initial-scale=1"}]
-     [:link {:rel "icon"
-             :type "image/png"
-             :href "/images/favicon.png"}]
+    (include-css-resources)
+    include-js-code-highlight
+    include-js-utils
+    [:meta {:name "viewport"
+            :content "width=device-width, initial-scale=1"}]
+    [:link {:rel "icon"
+            :type "image/png"
+            :href "/images/favicon.png"}]
     ]
    [:body
     [:div.w3-content.w3-light-yellow
@@ -73,7 +76,7 @@
            :href "javascript:void(0)"}
        "close menu"
        [:i {:class "fa fa-remove"}]
-       ] 
+       ]
       [:div about]
       [:div (generate-menu-navi "resources/meta.edn")]]
      [:div {:id "myOverlay",
