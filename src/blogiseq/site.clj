@@ -57,12 +57,7 @@
    [:head
     (include-css-resources)
     (include-js-resources)
-    [:meta {:name "viewport"
-            :content "width=device-width, initial-scale=1"}]
-    [:link {:rel "icon"
-            :type "image/png"
-            :href "/images/favicon.png"}]
-    ]
+    (slurp "resources/misc_header.html") ; include this as-is. this deserves some polishing
    [:body
     [:div.w3-content.w3-light-yellow
      [:nav#mySidenav.w3-sidenav.w3-light-yellow.w3-collapse {:style "z-index:3;width:250px;margin-top:51px;background-color:#fffbc7;"}
@@ -85,7 +80,7 @@
                                                           :class "w3-opennav w3-hide-large w3-xxlarge w3-hover-text-grey"} 
                                                    [:i {:class  "fa fa-bars"}]]]
                                                  content]]
-     ]]])
+     ]]]])
 
 (defn render
   "Renders whole site. Takes chunks of hiccup and renders them in standalone
