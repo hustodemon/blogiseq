@@ -9,12 +9,16 @@
     [markdown.core :as md])
   (:gen-class))
 
+(defn- menu-link [elem]
+  [:li
+   [:a.w3-hover-black {:href (:href elem)} (:title elem)]])
+
 (defn- articles-edn->hiccup-menu
   [edn]
   [:ul
-   (map
-     (fn [elem] [:a.w3-hover-black {:href (:href elem)} (:title elem)])
-     edn)])
+   (conj
+     (menu-link {:title "Home" :href "/"})
+     (map menu-link edn))])
 
 (defn- generate-menu-navi
   "Generates menu navigation structure."
