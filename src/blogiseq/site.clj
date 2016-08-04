@@ -6,7 +6,8 @@
     [hiccup.element :as hiccup-element]
     [compojure.core :as compojure]
     [compojure.route :as compojure-route]
-    [markdown.core :as md])
+    [markdown.core :as md]
+    [clojure.walk :refer [postwalk-replace]])
   (:gen-class))
 
 (defn- menu-link [elem]
@@ -51,34 +52,23 @@
     (map #(hiccup-page/include-js (str "/js/" %)))
   ))
 
-(defn- site ; would be cool to externalize this too (to support user-defined layouts)
+(defn fill-template [template menu content]
+  (postwalk-replace {:blogiseq-menu-placeholder menu
+                                  :blogiseq-content-placeholder content}
+                                 template))
+
+(defn- site
   [content]
   [:html
    [:head
     (include-css-resources)
     (include-js-resources)
-    (slurp "resources/misc_header.html") ; include this as-is. this deserves some polishing
-    [:body
-     [:div.w3-content.w3-light-yellow
-      [:nav#mySidenav.w3-sidenav.w3-light-yellow.w3-collapse {:style "z-index:3;width:250px;margin-top:51px;background-color:#fffbc7;"}
-       [:a {:title "Close menu"
-            :class "w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large"
-            :onclick "w3_close()"
-            :href "javascript:void(0)"}
-        "Close menu"]
-       [:div (generate-menu-navi "resources/meta.edn")]]
-      [:div {:id "myOverlay",
-             :title "close side menu",
-             :style "cursor:pointer",
-             :onclick "w3_close()",
-             :class "w3-overlay w3-hide-large"}]
-      [:div.w3-main {:style "margin-left:300px"} [:div
-                                                  [:header {:class "w3-container"}
-                                                   [:span {:onclick "w3_open()"
-                                                           :class "w3-opennav w3-hide-large w3-xxlarge w3-hover-text-grey"}
-                                                    "MENU"]]
-                                                  content]]
-      ]]]])
+    (slurp "resources/misc_header.html")] ; include this as-is. this deserves some polishing
+   [:body
+    (fill-template
+      (utils/parse-edn "resources/required/layout.edn")
+      (generate-menu-navi "resources/meta.edn")
+      content)]])
 
 (defn render
   "Renders whole site. Takes chunks of hiccup and renders them in standalone
