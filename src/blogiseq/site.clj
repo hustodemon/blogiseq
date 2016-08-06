@@ -24,8 +24,10 @@
 (defn- generate-menu-navi
   "Generates menu navigation structure."
   [path]
-  (-> path
-    utils/parse-edn
+  (-> (utils/swallow-exceptions
+        "Can't find meta.edn file."
+        nil
+        (utils/parse-edn-resource path))
     :articles
     articles-edn->hiccup-menu))
 
@@ -34,10 +36,13 @@
    [:div#disqus_thread]
    [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]
    (hiccup-element/javascript-tag
-     (clojure.string/replace
-       (slurp "resources/js/disqus.js")
-       "<PAGE_ID>"
-       page-id))
+     (utils/swallow-exceptions
+       "Can't load disqus js. Disquss won't be embedded."
+       nil
+       (clojure.string/replace
+         (clojure.java.io/resource "js/disqus.js")
+         "<PAGE_ID>"
+         page-id)))
    [:noscript "Please enable JS to see the discussion (disqus)."]])
 
 (defn- include-css-resources []
@@ -57,17 +62,28 @@
                                   :blogiseq-content-placeholder content}
                                  template))
 
+(def default-layout ; default layout, if custom isn't found
+  [:div.main
+   [:div.menu :blogiseq-menu-placeholder]
+   [:div.content :blogiseq-content-placeholder]])
+
 (defn- site
   [content]
   [:html
    [:head
     (include-css-resources)
     (include-js-resources)
-    (slurp "resources/misc_header.html")] ; include this as-is. this deserves some polishing
+    (utils/swallow-exceptions
+      "Can't parse misc_header.html file, ignoring."
+      nil
+      (utils/parse-resource "misc_header.html"))] ; include this as-is. this deserves some polishing
    [:body
     (fill-template
-      (utils/parse-edn "resources/required/layout.edn")
-      (generate-menu-navi "resources/meta.edn")
+      (utils/swallow-exceptions
+        "Can't parse layout.edn file, using the lame default."
+        default-layout
+        (utils/parse-edn-resource "layout.edn"))
+      (generate-menu-navi "meta.edn")
       content)]])
 
 (defn render

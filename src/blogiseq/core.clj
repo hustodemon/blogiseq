@@ -1,27 +1,31 @@
 (ns blogiseq.core
   (:require
     [blogiseq.site :as site]
+    [blogiseq.utils :as utils]
     [org.httpkit.server :as server]
     [hiccup.core :as hiccup]
-    [hiccup.page :as hiccup-page]
-    [hiccup.element :as hiccup-element]
     [compojure.core :as compojure]
     [compojure.route :as compojure-route]
     [markdown.core :as md])
   (:gen-class))
 
-(compojure/defroutes
-  routes
-  (compojure/GET "/" []
-                 (site/render (md/md-to-html-string (slurp "resources/required/index.md"))))
+(compojure/defroutes routes
+  ; index
+  (compojure/GET "/" []; ha! based on file type we could employ various renderers!
+                 (-> (utils/swallow-exceptions
+                       "index.md not found."
+                       "Welcome to blogiseq engine. README.md file says: 'read me'."
+                       (utils/parse-resource "index.md"))
+                   md/md-to-html-string
+                   site/render))
+  ; markdown renderer
   (compojure/GET "/*.md" [:as request]  ; why /:resource{\\.md} doesn't work?
                  (let [resource (:* (:params request))
-                       article (slurp (str "resources/" resource ".md"))]
+                       article (utils/parse-resource (str resource ".md"))]
                    (site/render-with-disqus (md/md-to-html-string article) nil)))
-  (compojure-route/resources "/articles" {:root "articles"})
-  (compojure-route/resources "/images" {:root "images"})
-  (compojure-route/resources "/css" {:root "css"})
-  (compojure-route/resources "/js" {:root "js"})
+  ; everything in `resources/`
+  (compojure-route/resources "/" {:root ""})
+  ; 404
   (compojure-route/not-found (hiccup/html (site/render "Stuff not found."))))
 
 (defonce server (atom nil))

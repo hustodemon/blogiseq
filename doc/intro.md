@@ -22,11 +22,7 @@ Clone the repo, `cd` inside. Now there are generally 2 options:
  with meaningful stuff (see the `resources/` directory in the project repository
  for examples).
 
-# Required files
-They are under the `required/` directory:
-* `index.md` - main page
-* `left-column.md` - the left column :)
-
+# `resources/` directory
 # The `resources/` directory structure
 blogiseq is just a bunch of code that reads stuff in `resources/` dir and
 presents it in the form of a web page.
@@ -35,7 +31,7 @@ presents it in the form of a web page.
 File containing the metadata about resources. Currently it is used for
 generating the "right-hand-side" menu).
 
-## `resources/articles`
+## `articles/directory`
 `blogiseq` parses markdown-formatted files (articles) in this directory.
 Including images (or other resources) in the arcticles is supported.
 
