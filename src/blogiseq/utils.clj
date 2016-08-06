@@ -10,10 +10,14 @@
                          ~default))
   )
 
-(defn parse-resource [path]
-  (-> path
-    clojure.java.io/resource
-    slurp)
+(defn- parse-resource
+  "Firstly parse path in the `resources/` dir. If not successful,
+  tries loading this from resources."
+  [path]
+  (if-let [ext-content (slurp (str "resources/" path))]
+    ext-content
+    (slurp (clojure.java.io/resource path))
+    )
   )
 
 (defn parse-edn-resource [path]
