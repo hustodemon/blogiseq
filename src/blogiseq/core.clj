@@ -12,10 +12,8 @@
 (compojure/defroutes routes
   ; index
   (compojure/GET "/" []; ha! based on file type we could employ various renderers!
-                 (-> (utils/swallow-exceptions
-                       "index.md not found."
-                       "Welcome to blogiseq engine. README.md file says: 'read me'."
-                       (utils/parse-resource "index.md"))
+                 (-> "index.md"
+                   (utils/parse-resource "Welcome to blogiseq engine. README.md file says: 'read me'.")
                    md/md-to-html-string
                    site/render))
   ; markdown renderer

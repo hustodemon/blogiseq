@@ -14,8 +14,7 @@
   [:li
    [:a.w3-hover-black {:href (:href elem)} (:title elem)]])
 
-(defn- articles-edn->hiccup-menu
-  [edn]
+(defn- articles-edn->hiccup-menu [edn]
   [:ul
    (conj
      (menu-link {:title "Home" :href "/"})
@@ -24,25 +23,34 @@
 (defn- generate-menu-navi
   "Generates menu navigation structure."
   [path]
-  (-> (utils/swallow-exceptions
-        "Can't find meta.edn file."
-        nil
-        (utils/parse-edn-resource path))
+  (-> path
+    (utils/parse-edn-resource nil)
     :articles
     articles-edn->hiccup-menu))
 
-(defn- embed-disqus [page-id]
+(defn- disqus-js [page-id]
+  (str
+    "var disqus_config = function () {
+    // todo try if ommiting this will be annoying:
+    // this.page.url = 'http://www.franky-canonical-fqdn.com/';
+    this.page.identifier = '" page-id "';
+    };
+
+    (function() {  // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = '//frankysblogiseq.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();"))
+
+(defn- embed-disqus
+  "Code for embedding disqus."
+  [page-id]
   [:div
    [:div#disqus_thread]
    [:div "<script id=\"dsq-count-scr\" src=\"//frankysblogiseq.disqus.com/count.js\" async></script>"]
    (hiccup-element/javascript-tag
-     (utils/swallow-exceptions
-       "Can't load disqus js. Disquss won't be embedded."
-       nil
-       (clojure.string/replace
-         (clojure.java.io/resource "js/disqus.js")
-         "<PAGE_ID>"
-         page-id)))
+     (disqus-js page-id))
    [:noscript "Please enable JS to see the discussion (disqus)."]])
 
 (defn- include-css-resources []
@@ -79,10 +87,7 @@
       (utils/parse-resource "misc_header.html"))] ; include this as-is. this deserves some polishing
    [:body
     (fill-template
-      (utils/swallow-exceptions
-        "Can't parse layout.edn file, using the lame default."
-        default-layout
-        (utils/parse-edn-resource "layout.edn"))
+      (utils/parse-edn-resource "layout.edn" default-layout)
       (generate-menu-navi "meta.edn")
       content)]])
 
