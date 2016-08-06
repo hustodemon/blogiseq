@@ -87,7 +87,7 @@
       (utils/parse-resource "misc_header.html"))] ; include this as-is. this deserves some polishing
    [:body
     (fill-template
-      (utils/parse-edn-resource "layout.edn" default-layout)
+      (utils/parse-edn-resource "layout.edn" (str default-layout))
       (generate-menu-navi "meta.edn")
       content)]])
 
