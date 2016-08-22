@@ -20,19 +20,12 @@
     (slurp path)))
 
 (defn parse-resource
-  "Firstly parse path in the `resources/` dir.
-  If not successful, tries loading this from resources.
-  If even this is not succesful and default is provided, returns the provided
-  default.
-  Otherwise return nil."
+  "Loads resource from given path or default if the resource loading returned
+  nil."
   ([path default]
-   (first
-     (filter
-       some?
-       (list
-         (slurp-nil (str "resources/" path))
-         (slurp-nil (clojure.java.io/resource path))
-         default))))
+   (or
+     (slurp-nil (clojure.java.io/resource path))
+     default))
   ([path]
    (parse-resource path nil)))
 
